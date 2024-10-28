@@ -65,6 +65,7 @@ app.post('/login', (req, res) => {
     }
   });
 });
+console.log('User data:', userData);
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
