@@ -5,8 +5,10 @@ const path = require('path');
 const app = express();
 const PORT = 3000;
 
-// Ensure the file exists by creating it if it doesn't
+// Use a single declaration for filePath
 const filePath = path.join(__dirname, 'users.txt');
+
+// Ensure the file exists by creating it if it doesn't
 if (!fs.existsSync(filePath)) {
   fs.writeFileSync(filePath, '');
 }
