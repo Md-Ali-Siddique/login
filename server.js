@@ -1,9 +1,8 @@
-// server.js
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt'); 
 const app = express();
 const PORT = 3000;
 
@@ -27,7 +26,7 @@ app.post('/signup', async (req, res) => {
       res.send('An error occurred while saving your data.');
     } else {
       console.log('Data saved successfully!');
-      res.redirect('/thank-you'); 
+      res.redirect('/thank-you');
     }
   });
 });
