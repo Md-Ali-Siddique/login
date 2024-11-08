@@ -14,6 +14,7 @@ if (!fs.existsSync(filePath)) {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname)));
 
+// Signup route
 app.post('/signup', (req, res) => {
   const { firstName, lastName, email, password, phone } = req.body;
   const userData = `Name: ${firstName} ${lastName}\nEmail: ${email}\nPassword: ${password}\nPhone: ${phone}\n\n`;
@@ -29,6 +30,7 @@ app.post('/signup', (req, res) => {
   });
 });
 
+// Login route
 app.post('/login', (req, res) => {
   const { identifier, password } = req.body;
   fs.readFile(filePath, 'utf8', (err, data) => {
@@ -60,8 +62,8 @@ app.post('/login', (req, res) => {
     }
   });
 });
-console.log('User data:', userData);
 
+// Start server
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
