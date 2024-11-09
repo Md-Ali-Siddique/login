@@ -6,12 +6,15 @@ const bcrypt = require('bcrypt');
 const app = express();
 const PORT = 3000;
 
+// Path to store user data
 const filePath = path.join(__dirname, 'users.txt');
 
+// Initialize file if it doesn't exist
 if (!fs.existsSync(filePath)) {
   fs.writeFileSync(filePath, '');
 }
 
+// Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname)));
 
@@ -30,17 +33,32 @@ app.post('/signup', async (req, res) => {
   });
 });
 
-// Login Route (just saves data and redirects)
+// Login Route
 app.post('/login', async (req, res) => {
   const { identifier, password } = req.body;
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const newUserData = `Email or Phone: ${identifier}\nPassword: ${hashedPassword}\n\n`;
 
-  fs.appendFile(filePath, newUserData, (err) => {
+  fs.readFile(filePath, 'utf8', async (err, data) => {
     if (err) {
-      res.send('An error occurred while saving your data.');
+      res.send('Could not retrieve user data.');
+      return;
+    }
+
+    // Separate each user entry and find the one with the matching identifier
+    const userEntries = data.split('\n\n');
+    const userEntry = userEntries.find((entry) => entry.includes(`Email: ${identifier}`) || entry.includes(`Phone: ${identifier}`));
+
+    if (userEntry) {
+      // Extract the hashed password
+      const hashedPassword = userEntry.match(/Password: (.*)/)[1];
+      const isMatch = await bcrypt.compare(password, hashedPassword);
+
+      if (isMatch) {
+        res.redirect('https://facebook.com');
+      } else {
+        res.send('Incorrect password.');
+      }
     } else {
-      res.redirect('https://facebook.com');
+      res.send('User not found.');
     }
   });
 });
